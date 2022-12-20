@@ -1,0 +1,68 @@
+package com.example.demo.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.Course;
+import com.example.demo.model.Student;
+import com.example.demo.repository.CourseDao;
+import com.example.demo.repository.StudentDao;
+
+@Service
+public class CourseServiceImpl implements CourseService{
+	
+	@Autowired
+	private CourseDao courseDao;
+	
+	@Autowired
+	private StudentDao studentDao;
+
+	@Override
+	public List<Course> getAllCourses() {
+		List<Course> list = courseDao.findAll();
+		if(list.size() == 0) return null;
+ 		return list;
+	}
+
+	@Override
+	public Course uploadCourse(Course course) {
+		courseDao.save(course);
+		return course;
+	}
+
+	@Override
+	public String removeCourse(Integer courseId) {
+		courseDao.deleteById(courseId);
+		return "course deleted successfully!";
+	}
+
+	@Override
+	public Course updateCourse(Integer courseId, Course course) {
+		Optional<Course> opt = courseDao.findById(courseId);
+		if(!opt.isPresent()) return null;
+		course.setCourseId(opt.get().getCourseId());
+		courseDao.save(course);
+		return course;
+	}
+
+	@Override
+	public List<Student> getStudentsFromCourse(Integer courseId) {
+		Optional<Course> opt = courseDao.findById(courseId);
+		Course course = opt.get();
+		if(course.getStudentList().size() == 0) return null;
+//		return course.getStudentList();
+		return null;
+	}
+
+	@Override
+	public List<Course> searchAssignedCourseForStudent(Integer studentId) {
+		Optional<Student> opt = studentDao.findById(studentId);
+		Student student = opt.get();
+		if(student.getCourses().size() == 0) return null;
+		return student.getCourses();
+	}
+
+}

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Course;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentDTO;
 import com.example.demo.service.CourseService;
 
 @RestController
@@ -41,5 +43,15 @@ public class CourseController {
 	@PutMapping("/{courseId}/")
 	public ResponseEntity<Course> updateCourseDetails(@PathVariable("courseId") Integer courseId, @RequestBody Course course) {
 		return new ResponseEntity<>(courseService.updateCourse(courseId, course), HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/student/{studentId}/")
+	public ResponseEntity<List<Course>> getAssignedCoursesOfStudentHandler(@PathVariable("studentId") Integer studentId) {
+		return new ResponseEntity<>(courseService.searchAssignedCourseForStudent(studentId), HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/{courseId}/")
+	public ResponseEntity<List<StudentDTO>> getStudentsFromCourseHandler(@PathVariable("courseId") Integer courseId) {
+		return new ResponseEntity<>(courseService.getStudentsFromCourse(courseId), HttpStatus.ACCEPTED);
 	}
 }

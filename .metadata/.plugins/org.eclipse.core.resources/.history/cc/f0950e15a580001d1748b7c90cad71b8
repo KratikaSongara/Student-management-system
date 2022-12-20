@@ -1,0 +1,15 @@
+package com.example.demo.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.model.Course;
+
+@Repository
+public interface CourseDao extends JpaRepository<Course, Integer>{
+	@Query("from Course where student_list_student_id = :studentId")
+	public List<Course> getCoursesOfStudentFromId(Integer studentId);
+}

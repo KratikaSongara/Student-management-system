@@ -1,19 +1,29 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Course;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentDTO;
 import com.example.demo.repository.CourseDao;
+import com.example.demo.repository.StudentDao;
 
 @Service
 public class CourseServiceImpl implements CourseService{
 	
 	@Autowired
 	private CourseDao courseDao;
+	
+	@Autowired
+	private StudentDao studentDao;
+	
+	private ModelMapper modelMapper = new ModelMapper();
 
 	@Override
 	public List<Course> getAllCourses() {
@@ -39,7 +49,28 @@ public class CourseServiceImpl implements CourseService{
 		Optional<Course> opt = courseDao.findById(courseId);
 		if(!opt.isPresent()) return null;
 		course.setCourseId(opt.get().getCourseId());
+		courseDao.save(course);
 		return course;
+	}
+
+	@Override
+	public List<StudentDTO> getStudentsFromCourse(Integer courseId) {
+		Optional<Course> opt = courseDao.findById(courseId);
+		Course course = opt.get();
+		if(course.getStudentList().size() == 0) return null;
+		List<StudentDTO> list = new ArrayList<>();
+		for(Student s : course.getStudentList()) {
+			list.add(modelMapper.map(s, StudentDTO.class));
+		}
+		return list;
+	}
+
+	@Override
+	public List<Course> searchAssignedCourseForStudent(Integer studentId) {
+		Optional<Student> opt = studentDao.findById(studentId);
+		Student student = opt.get();
+		if(student.getCourses().size() == 0) return null;
+		return student.getCourses();
 	}
 
 }

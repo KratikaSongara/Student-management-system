@@ -39,4 +39,5 @@ public class Student {
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Course> courses = new ArrayList<>();
+	
 }

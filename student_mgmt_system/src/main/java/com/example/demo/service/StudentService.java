@@ -4,13 +4,14 @@ import java.util.List;
 
 import com.example.demo.model.Course;
 import com.example.demo.model.Student;
+import com.example.demo.model.StudentDTO;
 
 public interface StudentService {
 	public Student registerStudent(Student student);
-	public Student assignCourse(Integer studentId, Integer courseId);
-	public Student getStudentByName(String studentName);
-	public List<Student> getStudentsFromCourse(Integer courseId);
-	public Student updateStudentDetails(Integer studentId, Student student);
-	public List<Course> searchCourseForStudent(Integer studentId);
+	public String assignCourse(Integer studentId, Integer courseId);
+	public List<StudentDTO> getStudentByName(String studentName);
+	public StudentDTO updateStudentDetails(Integer studentId, StudentDTO student);
+//	public List<Course> searchAssignedCourseForStudent(Integer studentId);
 	public String leaveCourse(Integer studentId, Integer courseId);
+//	public List<StudentDTO> getStudentsFromCourse(Integer courseId);
 }
