@@ -2,3 +2,14 @@
 1671540766977	Rename package 'com.example.demo.model'
 1671540860277	Rename package 'com.example.model'
 1671541363435	Rename type 'CourseService'
+1671599695180	Rename type 'MySecurityConfig'
+1671600765197	Rename type 'Admin'
+1671600786827	Rename type 'AdminDao'
+1671600805817	Rename type 'AdminController'
+1671600856451	Rename type 'AdminServiceImpl'
+1671603372706	Rename type 'UserController'
+1671605468984	Delete element
+1671605476293	Delete element
+1671605481885	Delete element
+1671605487048	Delete element
+1671605490986	Delete element

@@ -2,9 +2,12 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,8 +30,9 @@ public class CourseController {
 	@Autowired
 	private CourseService courseService;
 	
-	@PostMapping("/")
-	public ResponseEntity<CourseDTO> uploadCourse(@RequestBody Course course) {
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/admin/")
+	public ResponseEntity<CourseDTO> uploadCourse(@Valid @RequestBody Course course) {
 		return new ResponseEntity<>(courseService.uploadCourse(course), HttpStatus.ACCEPTED);
 	}
 	
@@ -37,22 +41,20 @@ public class CourseController {
 		return new ResponseEntity<>(courseService.getAllCourses(), HttpStatus.ACCEPTED);
 	}
 	
-	@DeleteMapping("/{courseId}/")
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/admin/{courseId}/")
 	public ResponseEntity<String> removeCourse(@PathVariable("courseId") Integer courseId) {
 		return new ResponseEntity<>(courseService.removeCourse(courseId), HttpStatus.ACCEPTED);
 	}
 	
-	@PutMapping("/{courseId}/")
-	public ResponseEntity<CourseDTO> updateCourseDetails(@PathVariable("courseId") Integer courseId, @RequestBody Course course) {
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/admin/{courseId}/")
+	public ResponseEntity<CourseDTO> updateCourseDetails(@PathVariable("courseId") Integer courseId,@Valid @RequestBody Course course) {
 		return new ResponseEntity<>(courseService.updateCourse(courseId, course), HttpStatus.ACCEPTED);
 	}
 	
-//	@GetMapping("/student/{studentId}/")
-//	public ResponseEntity<List<Course>> getAssignedCoursesOfStudentHandler(@PathVariable("studentId") Integer studentId, @RequestParam("dob") String dob) {
-//		return new ResponseEntity<>(courseService.searchAssignedCourseForStudent(studentId, dob), HttpStatus.ACCEPTED);
-//	}
-	
-	@GetMapping("/{courseId}/")
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/admin/{courseId}/")
 	public ResponseEntity<List<StudentDTO>> getStudentsFromCourseHandler(@PathVariable("courseId") Integer courseId) {
 		return new ResponseEntity<>(courseService.getStudentsFromCourse(courseId), HttpStatus.ACCEPTED);
 	}

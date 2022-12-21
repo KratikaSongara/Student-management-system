@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Admin;
-import com.example.demo.service.AdminService;
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
 	@Autowired
-	private AdminService adminService;
+	private UserService userService;
 	
 	@PostMapping("/")
-	public ResponseEntity<Admin> registerAdmin(@RequestBody Admin admin) {
-		return new ResponseEntity<>(adminService.registerAdmin(admin), HttpStatus.ACCEPTED);
+	public ResponseEntity<User> registerAdmin(@RequestBody User admin) {
+		return new ResponseEntity<>(userService.registerAdmin(admin), HttpStatus.ACCEPTED);
 	}
 	
-	@PutMapping("/{adminId}")
-	public ResponseEntity<Admin> updateAdmin(@PathVariable Integer adminId, @RequestBody Admin admin) {
-		return new ResponseEntity<>(adminService.updateAdminDetails(adminId, admin), HttpStatus.ACCEPTED);
+	@PutMapping("/{adminId}/")
+	public ResponseEntity<User> updateAdmin(@PathVariable Integer adminId, @RequestBody User admin) {
+		return new ResponseEntity<>(userService.updateAdminDetails(adminId, admin), HttpStatus.ACCEPTED);
 	}
 	
 }
