@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Course;
+import com.example.demo.model.CourseDTO;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentDTO;
 import com.example.demo.service.CourseService;
@@ -26,12 +28,12 @@ public class CourseController {
 	private CourseService courseService;
 	
 	@PostMapping("/")
-	public ResponseEntity<Course> uploadCourse(@RequestBody Course course) {
+	public ResponseEntity<CourseDTO> uploadCourse(@RequestBody Course course) {
 		return new ResponseEntity<>(courseService.uploadCourse(course), HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<Course>> getAllCourses() {
+	public ResponseEntity<List<CourseDTO>> getAllCourses() {
 		return new ResponseEntity<>(courseService.getAllCourses(), HttpStatus.ACCEPTED);
 	}
 	
@@ -41,14 +43,14 @@ public class CourseController {
 	}
 	
 	@PutMapping("/{courseId}/")
-	public ResponseEntity<Course> updateCourseDetails(@PathVariable("courseId") Integer courseId, @RequestBody Course course) {
+	public ResponseEntity<CourseDTO> updateCourseDetails(@PathVariable("courseId") Integer courseId, @RequestBody Course course) {
 		return new ResponseEntity<>(courseService.updateCourse(courseId, course), HttpStatus.ACCEPTED);
 	}
 	
-	@GetMapping("/student/{studentId}/")
-	public ResponseEntity<List<Course>> getAssignedCoursesOfStudentHandler(@PathVariable("studentId") Integer studentId) {
-		return new ResponseEntity<>(courseService.searchAssignedCourseForStudent(studentId), HttpStatus.ACCEPTED);
-	}
+//	@GetMapping("/student/{studentId}/")
+//	public ResponseEntity<List<Course>> getAssignedCoursesOfStudentHandler(@PathVariable("studentId") Integer studentId, @RequestParam("dob") String dob) {
+//		return new ResponseEntity<>(courseService.searchAssignedCourseForStudent(studentId, dob), HttpStatus.ACCEPTED);
+//	}
 	
 	@GetMapping("/{courseId}/")
 	public ResponseEntity<List<StudentDTO>> getStudentsFromCourseHandler(@PathVariable("courseId") Integer courseId) {

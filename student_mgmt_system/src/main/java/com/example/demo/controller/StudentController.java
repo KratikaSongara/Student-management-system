@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.Course;
+import com.example.demo.model.CourseDTO;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentDTO;
 import com.example.demo.service.StudentService;
@@ -40,12 +44,18 @@ public class StudentController {
 	}
 	
 	@PutMapping("/{studentId}/")
-	public ResponseEntity<StudentDTO> updateStudent(@PathVariable("studentId") Integer studentId, @RequestBody StudentDTO student) {
-		return new ResponseEntity<>(studentService.updateStudentDetails(studentId, student), HttpStatus.ACCEPTED);
+	public ResponseEntity<StudentDTO> updateStudent(@PathVariable("studentId") Integer studentId, @RequestBody StudentDTO student, @RequestParam("dob") String dob) {
+		return new ResponseEntity<>(studentService.updateStudentDetails(studentId, student, dob), HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/{studentId}/{courseId}/")
-	public ResponseEntity<String> removeStudentFromCourseHandler(@PathVariable("studentId") Integer studentId, @PathVariable("courseId") Integer courseId) {
-		return new ResponseEntity<>(studentService.leaveCourse(studentId, courseId), HttpStatus.ACCEPTED);
+	public ResponseEntity<String> removeStudentFromCourseHandler(@PathVariable("studentId") Integer studentId, @PathVariable("courseId") Integer courseId, @RequestParam("dob") String dob) {
+		return new ResponseEntity<>(studentService.leaveCourse(studentId, courseId, dob), HttpStatus.ACCEPTED);
 	}
+	
+	@GetMapping("/")
+	public ResponseEntity<List<CourseDTO>> getAssignedCoursesOfStudentHandler(@RequestParam("studentId") Integer studentId, @RequestParam("dob") String dob) {
+		return new ResponseEntity<>(studentService.searchAssignedCourseForStudent(studentId, dob), HttpStatus.ACCEPTED);
+	}
+	
 }

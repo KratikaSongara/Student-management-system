@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Course;
+import com.example.demo.model.CourseDTO;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentDTO;
 import com.example.demo.repository.CourseDao;
@@ -54,18 +57,10 @@ public class StudentServiceImpl implements StudentService{
 		return list;
 	}
 
-//	@Override
-//	public List<StudentDTO> getStudentsFromCourse(Integer courseId) {
-//		List<Student> student = studentDao.getStudentsByCourse(courseId);
-//		List<StudentDTO> list = new ArrayList<>();
-//		for(Student s : student) {
-//			list.add(modelMapper.map(s, StudentDTO.class));
-//		}
-//		return list;
-//	}
-
 	@Override
-	public StudentDTO updateStudentDetails(Integer studentId, StudentDTO student) {
+	public StudentDTO updateStudentDetails(Integer studentId, StudentDTO student, String dob) {
+//		StudentService ss = new StudentServiceImpl();
+		if(!validateStudent(studentId, dob)) return null;
 		Optional<Student> opt = studentDao.findById(studentId);
 		if(!opt.isPresent()) return null;
 		Student student2 = modelMapper.map(student, Student.class);
@@ -73,14 +68,9 @@ public class StudentServiceImpl implements StudentService{
 		return student;
 	}
 
-//	@Override
-//	public List<Course> searchAssignedCourseForStudent(Integer studentId) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
 	@Override
-	public String leaveCourse(Integer studentId, Integer courseId) {
+	public String leaveCourse(Integer studentId, Integer courseId, String dob) {
+		if(!validateStudent(studentId, dob)) return null;
 		Optional<Student> studentopt = studentDao.findById(studentId);
 		Optional<Course> courseopt = courseDao.findById(courseId);
 		Student student = studentopt.get();
@@ -94,6 +84,33 @@ public class StudentServiceImpl implements StudentService{
 		studentDao.save(student);
 		courseDao.save(course);
 		return "student successfully removed";
+	}
+
+	@Override
+	public Boolean validateStudent(Integer studentId, String dob) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dob2 = LocalDate.parse(dob, dtf);
+		Optional<Student> opt = studentDao.findById(studentId);
+//		System.out.println(opt.get());
+		if(!opt.isPresent()) return null;
+		Student student = opt.get();
+		if(!student.getDob().equals(dob2)) return false;
+		return true;
+	}
+	
+	@Override
+	public List<CourseDTO> searchAssignedCourseForStudent(Integer studentId, String dob) {
+//		StudentService ss = new StudentServiceImpl();
+		if(!validateStudent(studentId, dob)) return null;
+		Optional<Student> opt = studentDao.findById(studentId);
+		Student student = opt.get();
+		List<Course> courseList = student.getCourses();
+		if(courseList.size() == 0) return null;
+		List<CourseDTO> list = new ArrayList<>();
+		for(Course c : courseList) {
+			list.add(modelMapper.map(c, CourseDTO.class));
+		}
+		return list;
 	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Course;
+import com.example.demo.model.CourseDTO;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentDTO;
 import com.example.demo.repository.CourseDao;
@@ -26,16 +27,21 @@ public class CourseServiceImpl implements CourseService{
 	private ModelMapper modelMapper = new ModelMapper();
 
 	@Override
-	public List<Course> getAllCourses() {
-		List<Course> list = courseDao.findAll();
-		if(list.size() == 0) return null;
- 		return list;
+	public List<CourseDTO> getAllCourses() {
+		List<Course> courseList = courseDao.findAll();
+		if(courseList.size() == 0) return null;
+		List<CourseDTO> list = new ArrayList<>();
+		for(Course c : courseList) {
+			list.add(modelMapper.map(c, CourseDTO.class));
+		}
+		return list;
 	}
 
 	@Override
-	public Course uploadCourse(Course course) {
+	public CourseDTO uploadCourse(Course course) {
 		courseDao.save(course);
-		return course;
+		CourseDTO course2 = modelMapper.map(course, CourseDTO.class);
+		return course2;
 	}
 
 	@Override
@@ -45,12 +51,13 @@ public class CourseServiceImpl implements CourseService{
 	}
 
 	@Override
-	public Course updateCourse(Integer courseId, Course course) {
+	public CourseDTO updateCourse(Integer courseId, Course course) {
 		Optional<Course> opt = courseDao.findById(courseId);
 		if(!opt.isPresent()) return null;
 		course.setCourseId(opt.get().getCourseId());
 		courseDao.save(course);
-		return course;
+		CourseDTO course2 = modelMapper.map(course, CourseDTO.class);
+		return course2;
 	}
 
 	@Override
@@ -65,12 +72,14 @@ public class CourseServiceImpl implements CourseService{
 		return list;
 	}
 
-	@Override
-	public List<Course> searchAssignedCourseForStudent(Integer studentId) {
-		Optional<Student> opt = studentDao.findById(studentId);
-		Student student = opt.get();
-		if(student.getCourses().size() == 0) return null;
-		return student.getCourses();
-	}
+//	@Override
+//	public List<Course> searchAssignedCourseForStudent(Integer studentId, String dob) {
+//		StudentService ss = new StudentServiceImpl();
+//		if(!ss.validateStudent(studentId, dob)) return null;
+//		Optional<Student> opt = studentDao.findById(studentId);
+//		Student student = opt.get();
+//		if(student.getCourses().size() == 0) return null;
+//		return student.getCourses();
+//	}
 
 }
